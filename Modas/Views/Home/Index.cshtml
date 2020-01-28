@@ -1,5 +1,5 @@
 ﻿@using Modas.Models
-@model IEnumerable<Event>
+@model EventPaginationViewModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,23 +18,35 @@
         </div>
     </div>
     -->
+    @{string firstURL = "/Page1";}
+    @{string nextURL = "/Page" + (Model.CurrentPage + 1); }
+    @{string previousURL = "/Page" + (Model.CurrentPage - 1); }
+    @{string lastURL = "/Page" + (Model.MaxPage); }
+
+    <div class="container">
+        <div class="d-flex flex-row justify-content-between">
+            <a href="@(Model.CurrentPage == 1? "#":"/Page1")" class="btn btn-info  @(Model.CurrentPage == 1? "disabled":"") m-3" role="button"><i class="fas fa-angle-double-left"></i><p class=" d-md-block d-lg-block d-xl-block d-none">First</p> </a>
+            <a href="@(Model.CurrentPage == 1? "#":previousURL)" class="btn btn-info @(Model.CurrentPage == 1? "disabled":"") m-3" role="button"><i class="fas fa-angle-left"></i><p class=" d-md-block d-lg-block d-xl-block d-none">Previous</p></a>
+            <div class="d-flex justify-content-center"><p>Showing Events @Model.CurrentMinResult - @Model.CurrentMaxResult of @Model.TotalResults</p></div>
+            <a href="@(Model.CurrentPage == Model.MaxPage ? "#":nextURL)" class="btn btn-info @(Model.CurrentPage == Model.MaxPage ? "disabled":"") m-3" role="button"><i class="fas fa-angle-right"></i><p class=" d-md-block d-lg-block d-xl-block d-none">Next</p></a>
+            <a href="@(Model.CurrentPage == Model.MaxPage ? "#":lastURL)" class="btn btn-info @(Model.CurrentPage == Model.MaxPage ? "disabled":"") m-3" role="button"><i class="fas fa-angle-double-right"></i><p class=" d-md-block d-lg-block d-xl-block d-none">Last</p></a>
+        </div>
+    </div>
     <table class="container table table-bordered">
-        <tr><th>Date</th><th>Time</th><!--<th>Location</th>--></tr>        @foreach (var e in Model)
+        <tr><th>Date</th><th>Time</th><th>Location</th></tr>        @foreach (var e in Model.Events)
         {
             <tr>
                 <td>@String.Format("{0: ddd, MMM dd, yyyy}", e.TimeStamp)</td>
                 <td>@String.Format("{0:hh:mm tt}", e.TimeStamp)</td>
-                @*<td>@e.Location.Name</td>*@
+                <td>@e.Location.Name</td>
             </tr>
         }
     </table>
-
-    Home<i class="fa fa-home"></i>Sweet
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
     <script src="~/js/bootstrap.min.js"></script>
-    
+
 </body>
 </html>

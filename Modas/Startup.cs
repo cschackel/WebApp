@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modas.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Modas
 {
     public class Startup
     {
+        // this exposes the connection string in appsettings.json
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
@@ -37,10 +33,18 @@ namespace Modas
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvcWithDefaultRoute();
-
+            //app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "pagination",
+                    template: "Page{page}",
+                    defaults: new { Controller = "Home", action = "Index" });
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
             app.UseStaticFiles();
-
             SeedData.EnsurePopulated(app);
         }
     }
